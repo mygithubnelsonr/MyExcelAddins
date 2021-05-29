@@ -437,7 +437,6 @@ Dim retval
     strExportPath = strWbPath & "Code"
     
     retval = Shell(strExportPath & "\GitPush.bat")
-    Debug.Print retval
     
 End Sub
 
