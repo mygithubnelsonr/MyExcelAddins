@@ -1,7 +1,6 @@
 Attribute VB_Name = "modMain"
 Option Explicit
 
-
 Public Const lg As String = "modMain > "
 Public gstrStartPath$, gstrSourcePath$, gstrDatabase$, gstrCurrUser$
 
@@ -343,7 +342,48 @@ AUTExportModules_Error:
     Resume AUTExportModules_Exit
 
 End Sub
+'
+'Function AUTCreateExportFolderOld(wb As Workbook) As String
+'Dim WshShell As Object
+'Dim oFso As Object
+'Dim strExportAdd$, strWbName$, strExportPath$, Path$, strWbPath As String
+'Dim ar, Element
+'
+'    On Error GoTo AUTCreateExportFolder_Error
+'
+'    Set WshShell = CreateObject("WScript.Shell")
+'    Set oFso = CreateObject("scripting.filesystemobject")
+'
+'    strWbPath = ValidatePath(wb.Path)
+'    strWbName = Left(wb.Name, InStr(wb.Name, ".") - 1)
+'    strExportPath = strWbPath & "Code\" & strWbName & "\" & Format(Now(), "yyyymmddhhnnss")
+'    strExportAdd = Replace(strExportPath, strWbPath, "")
+'
+'    ar = Split(strExportAdd, "\")
+'    Path = strWbPath
+'    For Each Element In ar
+'        Path = ValidatePath(Path & Element)
+'        If (Dir(Path, vbDirectory) = "") Then
+'          MkDir Path
+'        End If
+'    Next
+'
+'    If oFso.FolderExists(strExportPath) = True Then
+'        AUTCreateExportFolder = strExportPath
+'    Else
+'        AUTCreateExportFolder = "Error"
+'    End If
+'
+'AUTCreateExportFolder_Exit:
+'    Exit Function
+'
+'AUTCreateExportFolder_Error:
+'    AUTCreateExportFolder = "Error"
+'    Resume AUTCreateExportFolder_Exit
+'
+'End Function
 
+' using allways the same exprt path
 Function AUTCreateExportFolder(wb As Workbook) As String
 Dim WshShell As Object
 Dim oFso As Object
@@ -357,7 +397,7 @@ Dim ar, Element
     
     strWbPath = ValidatePath(wb.Path)
     strWbName = Left(wb.Name, InStr(wb.Name, ".") - 1)
-    strExportPath = strWbPath & "Code\" & strWbName & "\" & Format(Now(), "yyyymmddhhnnss")
+    strExportPath = strWbPath & "Code\" & strWbName
     strExportAdd = Replace(strExportPath, strWbPath, "")
     
     ar = Split(strExportAdd, "\")
@@ -386,8 +426,18 @@ End Function
 
 Sub ExportModules()
 Dim wb As Workbook
+Dim strWbName$, strExportPath$, strWbPath As String
+Dim retval
 
     Set wb = ThisWorkbook
     AUTExportModules wb
+    
+    strWbPath = ValidatePath(wb.Path)
+    strWbName = Left(wb.Name, InStr(wb.Name, ".") - 1)
+    strExportPath = strWbPath & "Code"
+    
+    retval = Shell(strExportPath & "\GitPush.bat")
+    Debug.Print retval
+    
 End Sub
 

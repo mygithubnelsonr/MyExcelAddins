@@ -74,10 +74,19 @@ End Function
 
 Public Sub ExportModules()
 Dim wb As Workbook
+Dim strWbName$, strExportPath$, strWbPath As String
+Dim retval
 
     Set wb = ThisWorkbook
     EAToolsExportModules wb
 
+    strWbPath = ValidatePath(wb.Path)
+    strWbName = Left(wb.Name, InStr(wb.Name, ".") - 1)
+    strExportPath = strWbPath & "Code"
+    
+    retval = Shell(strExportPath & "\GitPush.bat")
+    Debug.Print retval
+    
 End Sub
 
 Public Sub EAToolsExportModules(wb As Workbook)
@@ -153,7 +162,7 @@ Dim ar, Element
     
     strWbPath = ValidatePath(wb.Path)
     strWbName = Left(wb.Name, InStr(wb.Name, ".") - 1)
-    strExportPath = strWbPath & "Code\" & strWbName & "\" & Format(Now(), "yyyymmddhhnnss")
+    strExportPath = strWbPath & "Code\" & strWbName         ' & "\" & Format(Now(), "yyyymmddhhnnss")
     strExportAdd = Replace(strExportPath, strWbPath, "")
     
     ar = Split(strExportAdd, "\")

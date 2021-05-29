@@ -6,4 +6,4 @@ git branch -M main
 git remote add origin https://github.com/mygithubnelsonr/MyExcelAddins.git
 git push -u origin main
 
-echo "last run: %dDate%" >> log.txt
+@echo last run: %Date% >> log.txt
